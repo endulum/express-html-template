@@ -1,19 +1,12 @@
-// const express = require('express')
-// const asyncHandler = require('express-async-handler')
-// const passport = require('passport')
-// const bcrypt = require('bcryptjs')
-// const { body } = require('express-validator')
-// const queries = require('../database/queries.js')
-// const authenticateUser = require('../middleware/authenticateUser.js')
-// const handleValidationErrors = require('../middleware/handleValidationErrors.js')
-
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 import { body } from 'express-validator';
-import queries from '../database/queries';
+import { PrismaClient } from '@prisma/client';
 import handleValidationErrors from '../middleware/handleValidationErrors';
+
+const prisma = new PrismaClient()
 
 const authenticateUser = asyncHandler(async (req, res, next) => {
   if (!req.user) {
@@ -72,7 +65,11 @@ const usernameValidation = body('username')
   .matches(/^[a-z0-9-]+$/g)
   .withMessage('Username must only consist of lowercase letters, numbers, and hyphens.')
   .custom(async (value, { req }) => {
-    const existingUser = await queries.getUserByUsername(value)
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        username: value
+      }
+    })
     if (existingUser && 'user' in req && existingUser.id !== req.user.id)
       throw new Error(
         'A user with this username already exists. Usernames must be unique.'
@@ -100,7 +97,12 @@ const handleSignupForm = asyncHandler(async (req, res, next) => {
   if (req.inputErrors !== undefined && req.inputErrors.length > 0) return next()
   bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
     if (err) throw new Error(err.message)
-    await queries.addUser(req.body.username, hashedPassword)
+    await prisma.user.create({
+      data: {
+        username: req.body.username,
+        password: hashedPassword
+      }
+    })
   })
   req.formMessage = 'Your account has been created. Log into your account below.'
   return renderLogin(req, res, next)
@@ -115,9 +117,17 @@ const logOut = asyncHandler(async (req, res, next) => {
 
 const renderAdmin = asyncHandler(async (req, res) => {
   if (req.user !== undefined &&
-    'id' in req.user && req.user.id === 1 &&
-    'username' in req.user && req.user.username === 'admin') {
-    const users = await queries.getAllUsers()
+    'role' in req.user && req.user.role === 'ADMIN') {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        role: true
+      },
+      orderBy: {
+        id: 'asc'
+      }
+    })
     return res.render('sample/admin', { users })
   }
   return res.status(403).render('sample/error', {
@@ -165,11 +175,19 @@ const handleAccountForm = asyncHandler(async (req, res, next) => {
   if (req.body.password !== '') {
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(req.body.password, salt)
-    await queries.updateUser(req.user.id, {
-      username: req.body.username,
-      password: hashedPassword
+    await prisma.user.update({
+      where: { id: req.user.id },
+      data: {
+        username: req.body.username,
+        password: hashedPassword
+      }
     })
-  } else await queries.updateUser(req.user.id, { username: req.body.username })
+  } else await prisma.user.update({
+    where: { id: req.user.id },
+      data: {
+        username: req.body.username,
+      }
+  })
   req.formMessage = 'Your changes have been successfully saved.'
   return renderAccount(req, res, next)
 })

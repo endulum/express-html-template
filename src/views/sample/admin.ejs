@@ -17,11 +17,13 @@
     <tr>
       <th>id</th>
       <th>username</th>
+      <th>role</th>
     </tr>
     <% for (let user of users) { %>
       <tr>
         <td><%= user.id %></td>
         <td><%= user.username %></td>
+        <td><%= user.role %></td>
       </tr>
     <% } %>
   </tbody>

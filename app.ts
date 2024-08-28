@@ -6,6 +6,9 @@ import session from 'express-session';
 import passport from 'passport';
 import pool from './src/database/pool';
 
+import ConnectPg from 'connect-pg-simple';
+const pgSession = ConnectPg(session)
+
 import logSession from './src/middleware/logSession';
 import errorHandler from './src/middleware/errorHandler';
 import sampleRouter from './src/routes/sampleRouter';
@@ -23,7 +26,7 @@ app.use(session({
   secret,
   resave: false,
   saveUninitialized: true,
-  store: new (require('connect-pg-simple')(session))({ pool }),
+  store: new pgSession({ pool, tableName: 'Session' }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24
   }
