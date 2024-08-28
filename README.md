@@ -1,7 +1,6 @@
 # HTML Server Template
-- **Lang:** TypeScript
-- **Framework:** Express.js
-- **Database:** Postgresql
+- **Lang:** TypeScript + Express.js Framework
+- **Database:** Postgresql + Prisma ORM
 - **Protection method:** Passport.js + sessions
 - **Templating engine:** EJS
 
