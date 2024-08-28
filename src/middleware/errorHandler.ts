@@ -1,4 +1,6 @@
-module.exports = (err, req, res, next) => {
+import { type Request, type Response, type NextFunction } from "express"
+
+const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof AggregateError) {
     console.error(err['errors'])
   } else console.error(err)
@@ -13,7 +15,9 @@ module.exports = (err, req, res, next) => {
   }
 
   return res.render('sample/error', {
-    code: err.statusCode,
+    code: 'statusCode' in err ? err.statusCode : 500,
     message: err.message || 'Something went wrong when handling your request.'
   })
-}
+};
+
+export default errorHandler;

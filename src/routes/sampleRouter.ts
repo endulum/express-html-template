@@ -1,11 +1,27 @@
-const express = require('express')
-const asyncHandler = require('express-async-handler')
-const passport = require('passport')
-const bcrypt = require('bcryptjs')
-const { body } = require('express-validator')
-const queries = require('../database/queries')
-const authenticateUser = require('../middleware/authenticateUser.js')
-const handleValidationErrors = require('../middleware/handleValidationErrors.js')
+// const express = require('express')
+// const asyncHandler = require('express-async-handler')
+// const passport = require('passport')
+// const bcrypt = require('bcryptjs')
+// const { body } = require('express-validator')
+// const queries = require('../database/queries.js')
+// const authenticateUser = require('../middleware/authenticateUser.js')
+// const handleValidationErrors = require('../middleware/handleValidationErrors.js')
+
+import express from 'express';
+import asyncHandler from 'express-async-handler';
+import passport from 'passport';
+import bcrypt from 'bcryptjs';
+import { body } from 'express-validator';
+import queries from '../database/queries';
+import handleValidationErrors from '../middleware/handleValidationErrors';
+
+const authenticateUser = asyncHandler(async (req, res, next) => {
+  if (!req.user) {
+    req.formMessage = 'You must be logged in to view this page.'
+    return renderLogin(req, res, next)
+  }
+  return next()
+})
 
 const renderIndex = asyncHandler(async (req, res) => {
   return res.render('sample/index', {
@@ -29,7 +45,7 @@ const validateLoginForm = [
 ]
 
 const handleLoginForm = asyncHandler(async (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', (err: Error, user: Express.User) => {
     if (err) return next(err)
     if (!user) {
       req.inputErrors = ['Incorrect username or password.']
@@ -57,9 +73,9 @@ const usernameValidation = body('username')
   .withMessage('Username must only consist of lowercase letters, numbers, and hyphens.')
   .custom(async (value, { req }) => {
     const existingUser = await queries.getUserByUsername(value)
-    if (existingUser && 'user' in req && existingUser.id !== req.user.id) 
+    if (existingUser && 'user' in req && existingUser.id !== req.user.id)
       throw new Error(
-      'A user with this username already exists. Usernames must be unique.'
+        'A user with this username already exists. Usernames must be unique.'
       )
   })
   .escape()
@@ -81,13 +97,13 @@ const validateSignupForm = [
 ]
 
 const handleSignupForm = asyncHandler(async (req, res, next) => {
-  if ('inputErrors' in req && req.inputErrors.length > 0) return next()
+  if (req.inputErrors !== undefined && req.inputErrors.length > 0) return next()
   bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-    if (err) throw new Error(err)
+    if (err) throw new Error(err.message)
     await queries.addUser(req.body.username, hashedPassword)
   })
   req.formMessage = 'Your account has been created. Log into your account below.'
-  return renderLogin(req, res)
+  return renderLogin(req, res, next)
 })
 
 const logOut = asyncHandler(async (req, res, next) => {
@@ -98,7 +114,9 @@ const logOut = asyncHandler(async (req, res, next) => {
 })
 
 const renderAdmin = asyncHandler(async (req, res) => {
-  if (req.user.id === 1 && req.user.username === 'admin') {
+  if (req.user !== undefined &&
+    'id' in req.user && req.user.id === 1 &&
+    'username' in req.user && req.user.username === 'admin') {
     const users = await queries.getAllUsers()
     return res.render('sample/admin', { users })
   }
@@ -109,11 +127,14 @@ const renderAdmin = asyncHandler(async (req, res) => {
 })
 
 const renderAccount = asyncHandler(async (req, res) => {
-  console.log(req.body)
+  if (req.user === undefined) throw new Error('No user was logged in.')
   return res.render('sample/account', {
     formMessage: req.formMessage,
     inputErrors: req.inputErrors,
-    prevInputs: { ...req.body, username: 'username' in req.body ? req.body.username : req.user.username }
+    prevInputs: {
+      ...req.body,
+      username: 'username' in req.body ? req.body.username : req.user.username
+    }
   })
 })
 
@@ -139,18 +160,18 @@ const validateAccountForm = [
 ]
 
 const handleAccountForm = asyncHandler(async (req, res, next) => {
-  if ('inputErrors' in req && req.inputErrors.length > 0) return next()
+  if (req.user === undefined) throw new Error('No user was logged in.')
+  if (req.inputErrors !== undefined && req.inputErrors.length > 0) return next()
   if (req.body.password !== '') {
-    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-      if (err) throw new Error(err)
-      await queries.updateUser(req.user.id, {
-        username: req.body.username,
-        password: hashedPassword
-      })
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    await queries.updateUser(req.user.id, {
+      username: req.body.username,
+      password: hashedPassword
     })
   } else await queries.updateUser(req.user.id, { username: req.body.username })
   req.formMessage = 'Your changes have been successfully saved.'
-  return renderAccount(req, res)
+  return renderAccount(req, res, next)
 })
 
 const sampleRouter = express.Router()
@@ -170,4 +191,4 @@ sampleRouter.route('/account')
   .get(authenticateUser, renderAccount)
   .post(authenticateUser, validateAccountForm, handleValidationErrors, handleAccountForm, renderAccount)
 
-module.exports = sampleRouter
+export default sampleRouter
