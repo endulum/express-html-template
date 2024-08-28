@@ -4,10 +4,8 @@ import path from 'path';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
-import pool from './src/database/pool';
-
-import ConnectPg from 'connect-pg-simple';
-const pgSession = ConnectPg(session)
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { PrismaClient } from '@prisma/client';
 
 import logSession from './src/middleware/logSession';
 import errorHandler from './src/middleware/errorHandler';
@@ -26,7 +24,14 @@ app.use(session({
   secret,
   resave: false,
   saveUninitialized: true,
-  store: new pgSession({ pool, tableName: 'Session' }),
+  store: new PrismaSessionStore(
+    new PrismaClient(),
+    {
+      checkPeriod: 2 * 60 * 1000,
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined
+    }
+  ),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24
   }
