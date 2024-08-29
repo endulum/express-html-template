@@ -116,8 +116,7 @@ const logOut = asyncHandler(async (req, res, next) => {
 })
 
 const renderAdmin = asyncHandler(async (req, res) => {
-  if (req.user !== undefined &&
-    'role' in req.user && req.user.role === 'ADMIN') {
+  if (req.user !== undefined && req.user.role === 'ADMIN') {
     const users = await prisma.user.findMany({
       select: {
         id: true,
