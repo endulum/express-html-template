@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.ts",
-    "reset-db": "node src/database/reset.js"
+    "dev": "ENV=development nodemon --watch src --exec ts-node ./app.ts",
+    "start": "ENV=production node ./dist/app.js",
+    "build": "tsc && cp -r ./src/views ./dist/src/views",
+    "clean": "rm -r ./dist"
   },
   "keywords": [],
   "author": "",
