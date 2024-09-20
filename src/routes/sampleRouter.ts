@@ -3,10 +3,8 @@ import asyncHandler from 'express-async-handler';
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 import { body } from 'express-validator';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../prisma'
 import handleValidationErrors from '../middleware/handleValidationErrors';
-
-const prisma = new PrismaClient()
 
 const authenticateUser = asyncHandler(async (req, res, next) => {
   if (!req.user) {

@@ -1,4 +1,7 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env' })
+dotenv.config({ path: '.env.' + process.env.ENV })
+
 import './config/passport';
 import path from 'path';
 import express from 'express';
@@ -38,8 +41,8 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(logSession)
 
+app.use(logSession)
 app.use(sampleRouter)
 app.use(errorHandler)
 

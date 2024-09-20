@@ -8,7 +8,8 @@
     "dev": "ENV=development nodemon --watch src --exec ts-node ./app.ts",
     "start": "ENV=production node ./dist/app.js",
     "build": "tsc && cp -r ./src/views ./dist/src/views",
-    "clean": "rm -r ./dist"
+    "clean": "rm -r ./dist",
+    "generate": "npx dotenv -e .env.development -- npx prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "bcryptjs": "^2.4.3",
     "connect-pg-simple": "^9.0.1",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
