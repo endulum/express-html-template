@@ -6,13 +6,15 @@ import './config/passport';
 import path from 'path';
 import express from 'express';
 import session from 'express-session';
+import asyncHandler from 'express-async-handler'
 import passport from 'passport';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 
 import logSession from './src/middleware/logSession';
 import errorHandler from './src/middleware/errorHandler';
-import sampleRouter from './src/routes/sampleRouter';
+import { router as authRouter } from './src/routes/authRouter';
+import { router as mainRouter } from './src/routes/mainRouter'
 
 const secret: string | undefined = process.env.SECRET
 if (secret === undefined) throw new Error('Secret is not defined.')
@@ -42,8 +44,12 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(logSession)
-app.use(sampleRouter)
+app.use(asyncHandler(async (req, res, next) => {
+  res.locals.user = req.user
+  if (req.user) return mainRouter(req, res, next)
+  else return authRouter(req, res, next)
+}))
+
 app.use(errorHandler)
 
 app.listen(3000)

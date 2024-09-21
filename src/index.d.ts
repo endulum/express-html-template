@@ -3,9 +3,8 @@ export {}
 declare global {
   namespace Express {
     export interface Request {
-      formMessage?: string,
-      inputErrors?: string[],
-      user?: User | undefined
+      formErrors?: Record<string, string>,
+      user: User
     }
     export interface User {
       id: number,

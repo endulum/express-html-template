@@ -4,9 +4,13 @@ import { validationResult } from "express-validator";
 const handleValidationErrors = asyncHandler(async (req, res, next) => {
   const errorsArray = validationResult(req).array()
   if (errorsArray.length > 0) {
-    req.inputErrors = errorsArray.map(error => error.msg)
+    req.formErrors = {}
+    errorsArray.forEach(error => {
+      if (req.formErrors && error.type === 'field') 
+        req.formErrors[error.path] = error.msg
+    })
   }
-  next()
+  return next()
 })
 
 export default handleValidationErrors
