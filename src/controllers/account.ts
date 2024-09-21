@@ -14,8 +14,8 @@ export const controller: {
 } = {
   render: asyncHandler(async (req, res) => {
     if (!req.user) {
-      res.sendStatus(401)
-      return;
+      req.flash('warning', 'You must be logged in to edit your account details.')
+      return res.redirect('/login')
     }
     return res.render('layout', {
       page: 'forms/update-account',
@@ -58,8 +58,8 @@ export const controller: {
 
   submit: asyncHandler(async (req, res, next) => {
     if (!req.user) {
-      res.sendStatus(401)
-      return;
+      req.flash('warning', 'You must be logged in to edit your account details.')
+      return res.redirect('/login')
     }
     if (req.formErrors) return controller.render(req, res, next);
     else {
@@ -84,6 +84,7 @@ export const controller: {
           username: req.body.username,
         }
       })
+      req.flash('success', 'Your account details have been saved.')
       return res.redirect('/account')
     }
   })

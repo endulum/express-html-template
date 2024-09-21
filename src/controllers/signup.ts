@@ -48,6 +48,8 @@ export const controller: {
         }
       })
     })
+    req.flash('success', 'Your account has been created. Please proceed to log in to your new account.')
+    req.flash('loginUsernamePrefill', req.body.username)
     return res.redirect('/login')
   })
 }

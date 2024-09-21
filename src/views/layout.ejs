@@ -27,6 +27,18 @@
     </header>
     <main>
       <h2><%= title %></h2>
+      <% if ('warning' in locals && locals.warning.length > 0) { %>
+        <p>
+          <b>Warning: </b>
+          <%= warning %>
+        </p>
+      <% } %>
+      <% if ('success' in locals && locals.success.length > 0) { %>
+        <p>
+          <b>Success: </b>
+          <%= success %>
+        </p>
+      <% } %>
       <%- include('pages/' + page) %>
     </main>
   </body>

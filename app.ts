@@ -4,6 +4,7 @@ dotenv.config({ path: '.env.' + process.env.ENV })
 
 import './config/passport';
 import path from 'path';
+import flash from 'connect-flash';
 import express from 'express';
 import session from 'express-session';
 import asyncHandler from 'express-async-handler'
@@ -41,11 +42,14 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24
   }
 }))
+app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(asyncHandler(async (req, res, next) => {
   res.locals.user = req.user
+  res.locals.warning = req.flash('warning')
+  res.locals.success = req.flash('success')
   if (req.user) return mainRouter(req, res, next)
   else return authRouter(req, res, next)
 }))

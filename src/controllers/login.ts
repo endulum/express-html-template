@@ -9,10 +9,14 @@ export const controller: {
   submit: RequestHandler
 } = {
   render: asyncHandler(async (req, res) => {
+    const loginUsernamePrefill = req.flash('loginUsernamePrefill')
     return res.render('layout', {
       page: 'login',
       title: 'Log In',
-      prevForm: req.body,
+      prevForm: {
+        ...req.body,
+        username: loginUsernamePrefill ?? req.body.username
+      },
       formErrors: req.formErrors
     })
   }),
