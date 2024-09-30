@@ -16,6 +16,6 @@ router.route('/signup')
   .post(signup.validate, handleValidationErrors, signup.submit)
 
 router.route('*')
-  .all(asyncHandler(async (req, res) => res.redirect('/login')))
+  .all(asyncHandler(async (_req, res) => res.redirect('/login')))
 
 export { router }

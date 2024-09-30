@@ -1,6 +1,5 @@
 import { ValidationChain, body } from "express-validator";
 import asyncHandler from 'express-async-handler'
-import passport from "passport";
 import { RequestHandler } from "express";
 import bcrypt from 'bcryptjs'
 

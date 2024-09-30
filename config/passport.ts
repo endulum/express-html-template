@@ -1,11 +1,13 @@
 import passport, { type DoneCallback } from "passport";
-const LocalStrategy = require('passport-local').Strategy;
+import passportLocal, { VerifyFunction } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient()
+const LocalStrategy = passportLocal.Strategy
 
 passport.use(new LocalStrategy(
-  async (username: string, password: string, done: DoneCallback) => {
+  (async (username: string, password: string, done: DoneCallback) => {
     try {
       const user = await prisma.user.findUnique({
         where: { username }
@@ -15,7 +17,7 @@ passport.use(new LocalStrategy(
       if (!match) return done(null, false)
       return done(null, user)
     } catch (e) { return done(e) }
-  }
+  }) as VerifyFunction
 ))
 
 passport.serializeUser((user, done) => {

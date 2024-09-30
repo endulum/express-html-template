@@ -23,5 +23,4 @@ Likewise, Prisma is the first ORM I'd been exposed to. As to why an ORM should b
 ## Todo
 - ...
 ### Other consideration
-- Add a linter
 - Add a testing suite

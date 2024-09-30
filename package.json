@@ -20,17 +20,14 @@
     "@quixo3/prisma-session-store": "^3.1.13",
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
-    "connect-pg-simple": "^9.0.1",
     "dotenv": "^16.4.5",
-    "dotenv-cli": "^7.4.2",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "express-session": "^1.18.0",
     "express-validator": "^7.2.0",
     "passport": "^0.7.0",
-    "passport-local": "^1.0.0",
-    "pg": "^8.12.0"
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -40,10 +37,14 @@
     "@types/express-session": "^1.18.0",
     "@types/node": "^22.5.0",
     "@types/passport": "^1.0.16",
+    "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.11.6",
+    "dotenv-cli": "^7.4.2",
+    "eslint": "^9.11.1",
     "nodemon": "^3.1.4",
     "prisma": "^5.19.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.7.0"
   }
 }

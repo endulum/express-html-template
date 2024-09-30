@@ -7,6 +7,10 @@
     "./src/index.d.ts"
   ],
   "exclude": ["node_modules"],
+  "include": [
+    "./eslint.config.mjs",
+    "./prisma/reset.ts"
+  ],
   "compilerOptions": {
     "module": "CommonJS",
     "sourceMap": true,

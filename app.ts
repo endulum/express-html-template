@@ -12,7 +12,7 @@ import passport from 'passport';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 
-import logSession from './src/middleware/logSession';
+// import logSession from './src/middleware/logSession';
 import errorHandler from './src/middleware/errorHandler';
 import { router as authRouter } from './src/routes/authRouter';
 import { router as mainRouter } from './src/routes/mainRouter'
