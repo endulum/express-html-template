@@ -1,21 +1,17 @@
-import express from 'express'
-import asyncHandler from 'express-async-handler'
-import handleValidationErrors from '../middleware/handleValidationErrors'
+import express from "express";
+import asyncHandler from "express-async-handler";
 
-import { controller as login } from '../controllers/login'
-import { controller as signup } from '../controllers/signup'
+import * as auth from "../controllers/auth";
+import * as render from "../controllers/render";
 
-const router = express.Router()
+const router = express.Router();
 
-router.route('/login')
-  .get(login.render)
-  .post(login.validate, handleValidationErrors, login.submit)
+const catchAll = asyncHandler(async (req, res, next) => {
+  res.redirect("/login");
+});
 
-router.route('/signup')
-  .get(signup.render)
-  .post(signup.validate, handleValidationErrors, signup.submit)
+router.route("/login").get(render.login).post(auth.logIn);
+router.route("/signup").get(render.signup).post(auth.signUp);
+router.route("*").all(catchAll);
 
-router.route('*')
-  .all(asyncHandler(async (_req, res) => res.redirect('/login')))
-
-export { router }
+export { router };

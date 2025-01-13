@@ -7,9 +7,8 @@
 
 ## Todo
 
-- Extract queries into own `queries` directory under `prisma`
 - Add a testing suite (Vitest)
-- Browse and inmplement Express.js best practices:
+- Browse and implement Express.js best practices:
   - [Security](https://expressjs.com/en/advanced/best-practice-security.html)
   - [Performance](https://expressjs.com/en/advanced/best-practice-performance.html#cache-request-results)
 - Add prettier config

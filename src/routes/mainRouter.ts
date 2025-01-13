@@ -1,33 +1,33 @@
-import express from 'express'
-import asyncHandler from 'express-async-handler'
-import handleValidationErrors from '../middleware/handleValidationErrors'
+import express from "express";
+import asyncHandler from "express-async-handler";
 
-import { controller as account } from '../controllers/account'
+import * as user from "../controllers/user";
+import * as render from "../controllers/render";
 
-const router = express.Router()
+const router = express.Router();
 
-router.route('/')
-  .get(asyncHandler(async (_req, res) => {
-    return res.render('layout', {
-      page: 'index',
-      title: 'Index'
-    })
-  }))
+const renderIndex = asyncHandler(async (_req, res) => {
+  return res.render("layout", {
+    page: "index",
+    title: "Index",
+  });
+});
 
-router.route('/account')
-  .get(account.render)
-  .post(account.validate, handleValidationErrors, account.submit)
+const logOut = asyncHandler(async (req, res, next) => {
+  req.logOut((err) => {
+    if (err) return next(err);
+    req.flash("success", "You have been logged out.");
+    return res.redirect("/login");
+  });
+});
 
-router.route('/logout')
-  .get(asyncHandler(async (req, res, next) => {
-    req.logOut((err) => {
-      if (err) return next(err);
-      req.flash('success', 'You have been logged out.')
-      return res.redirect('/login')
-    })
-  }))
+const catchAll = asyncHandler(async (req, res, next) => {
+  res.redirect("/");
+});
 
-router.route('*')
-  .all(asyncHandler(async (_req, res) => res.redirect('/')))
+router.route("/").get(renderIndex);
+router.route("/account").get(render.account).post(user.edit);
+router.route("/logout").get(logOut);
+router.route("*").all(catchAll);
 
-export { router }
+export { router };
