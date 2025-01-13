@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "envinit": "cp -n .env.example .env.production && cp -n .env.example .env.development && cp -n .env.example .env.test",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ENV=development nodemon --exec ts-node ./app.ts",
     "start": "ENV=production node ./dist/app.js",
