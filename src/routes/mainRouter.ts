@@ -21,13 +21,9 @@ const logOut = asyncHandler(async (req, res, next) => {
   });
 });
 
-const catchAll = asyncHandler(async (req, res, next) => {
-  res.redirect("/");
-});
-
 router.route("/").get(renderIndex);
 router.route("/account").get(render.account).post(user.edit);
 router.route("/logout").get(logOut);
-router.route("*").all(catchAll);
+router.route("*").all(render.notFound);
 
 export { router };

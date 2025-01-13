@@ -1,5 +1,21 @@
 import asyncHandler from "express-async-handler";
 
+export const notFound = asyncHandler(async (req, res) => {
+  return res.status(404).render("layout", {
+    page: "error",
+    title: "Not Found",
+    message: "The page you're looking for could not be found.",
+  });
+});
+
+export const rateLimit = asyncHandler(async (req, res) => {
+  return res.status(404).render("layout", {
+    page: "error",
+    title: "Too Many Requests",
+    message: "You're making too many requests too fast. Try again later.",
+  });
+});
+
 export const account = asyncHandler(async (req, res) => {
   if (!req.user) {
     req.flash("warning", "You must be logged in to edit your account details.");

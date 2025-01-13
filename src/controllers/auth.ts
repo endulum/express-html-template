@@ -1,13 +1,24 @@
 import asyncHandler from "express-async-handler";
 import { body } from "express-validator";
 import passport from "passport";
+import { rateLimit } from "express-rate-limit";
 
 import { usernameValidation } from "../common/usernameValidation";
 import { validate } from "../middleware/handleValidationErrors";
 import * as userQueries from "../../prisma/queries/user";
 import * as render from "./render";
 
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 5,
+  // 5 submissions allowed every 5 minutes
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: render.rateLimit,
+});
+
 export const logIn = [
+  ...(process.env.NODE_ENV !== "test" ? [limiter] : []),
   body("username")
     .trim()
     .notEmpty()
@@ -36,6 +47,7 @@ export const logIn = [
 ];
 
 export const signUp = [
+  ...(process.env.NODE_ENV !== "test" ? [limiter] : []),
   usernameValidation,
   body("password")
     .trim()

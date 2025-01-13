@@ -24,6 +24,7 @@ import asyncHandler from "express-async-handler";
 import path from "path";
 import flash from "connect-flash";
 import passport from "passport";
+import helmet from "helmet";
 
 import errorHandler from "./src/middleware/errorHandler";
 import { router as authRouter } from "./src/routes/authRouter";
@@ -34,6 +35,10 @@ import { PrismaClient } from "@prisma/client";
 
 const app = express();
 
+app.use(helmet());
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+
 app.set("views", path.join(__dirname, "src/views"));
 app.set("view engine", "ejs");
 app.use(express.json());
@@ -41,6 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
+    name: "sessionId",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
@@ -50,6 +56,8 @@ app.use(
       dbRecordIdFunction: undefined,
     }),
     cookie: {
+      secure: true,
+      httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
     },
   })
