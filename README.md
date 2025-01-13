@@ -8,9 +8,6 @@
 ## Todo
 
 - Add a testing suite (Vitest)
-- Browse and implement Express.js best practices:
-  - [Performance](https://expressjs.com/en/advanced/best-practice-performance.html#cache-request-results)
-- Add prettier config
 - Add utility css file under `public`
 
 ## Installation

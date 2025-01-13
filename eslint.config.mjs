@@ -13,43 +13,40 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
-export default [...compat.extends(
-  'airbnb-base',
-  'airbnb-typescript/base',
-  'eslint:recommended',
-  'plugin:@typescript-eslint/eslint-recommended',
-  'plugin:@typescript-eslint/recommended',
-), {
-  plugins: {
-    '@typescript-eslint': typescriptEslint,
-  },
+export default [
+  ...compat.extends(
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+  ),
+  {
+    plugins: {
+      '@typescript-eslint': typescriptEslint,
+    },
 
-  languageOptions: {
-    parser: tsParser,
-    parserOptions: {
-      project: './tsconfig.json',
-      tsconfigRootDir: __dirname
+    languageOptions: {
+      parser: tsParser,
+    },
+
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      'no-console': [
+        'warn',
+        {
+          allow: ['warn', 'error'],
+        },
+      ],
     },
   },
-
-  rules: {
-    '@typescript-eslint/no-unused-vars': [
-      'warn',
-      {
-        args: 'all',
-        argsIgnorePattern: '^_',
-        caughtErrors: 'all',
-        caughtErrorsIgnorePattern: '^_',
-        destructuredArrayIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        ignoreRestSiblings: true,
-      },
-    ],
-    'no-console': [
-      'warn',
-      {
-        allow: ['warn', 'error'],
-      },
-    ],
-  },
-}];
+];

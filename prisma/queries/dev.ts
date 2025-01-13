@@ -1,10 +1,10 @@
-import { Prisma } from "@prisma/client";
-import bcrypt from "bcryptjs";
-import { client } from "../client";
+import { Prisma } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import { client } from '../client';
 
 const testPassword = async () => {
   const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash("password", salt);
+  return bcrypt.hash('password', salt);
 };
 
 export async function truncateTable(tableName: string) {
@@ -19,16 +19,16 @@ export async function createAdmin() {
   });
 
   if (firstUser !== null) {
-    if (firstUser.username === "admin" && firstUser.role === "ADMIN")
+    if (firstUser.username === 'admin' && firstUser.role === 'ADMIN')
       return firstUser; // do nothing if an admin already exists
 
     await client.user.deleteMany({
-      where: { OR: [{ username: "admin" }, { role: "ADMIN" }] },
+      where: { OR: [{ username: 'admin' }, { role: 'ADMIN' }] },
     }); // erase any "partial" admins just in case
 
     // increment existing user ids by 1
     const usersToUpdate = await client.user.findMany({
-      orderBy: { id: "desc" },
+      orderBy: { id: 'desc' },
     });
 
     await client.$transaction([
@@ -36,23 +36,23 @@ export async function createAdmin() {
         client.user.update({
           where: { id: row.id },
           data: { id: { increment: 1 } },
-        })
+        }),
       ),
     ]);
   }
 
   const admin = await client.user.create({
     data: {
-      username: "admin",
+      username: 'admin',
       password: await testPassword(),
-      role: "ADMIN",
+      role: 'ADMIN',
       id: 1,
     },
   });
 
   // since the id is manually set, we need to prevent unique constraint error
   await client.$executeRawUnsafe(
-    "SELECT setval(pg_get_serial_sequence('\"User\"', 'id'), coalesce(max(id)+1, 1), false) FROM \"User\";"
+    'SELECT setval(pg_get_serial_sequence(\'"User"\', \'id\'), coalesce(max(id)+1, 1), false) FROM "User";',
   );
   // https://github.com/prisma/prisma/discussions/5256#discussioncomment-1191352
 

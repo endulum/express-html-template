@@ -1,7 +1,7 @@
-import { type Prisma } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import { type Prisma } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
-import { client } from "../client";
+import { client } from '../client';
 
 export async function find({
   username,
@@ -26,7 +26,7 @@ export async function comparePassword({
   password: string;
 }) {
   let user: { password: string | null } | null = null;
-  if (typeof userData === "string") {
+  if (typeof userData === 'string') {
     user = await client.user.findUnique({
       where: { username: userData },
     });

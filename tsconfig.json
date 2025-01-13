@@ -2,15 +2,9 @@
   "ts-node": {
     "files": true
   },
-  "files": [
-    "app.ts",
-    "./src/index.d.ts"
-  ],
+  "files": ["app.ts", "./src/index.d.ts"],
   "exclude": ["node_modules"],
-  "include": [
-    "./eslint.config.mjs",
-    "./prisma/reset.ts"
-  ],
+  "include": ["./eslint.config.mjs", "./prisma/reset.ts"],
   "compilerOptions": {
     "module": "CommonJS",
     "sourceMap": true,
