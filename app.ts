@@ -25,6 +25,7 @@ import path from "path";
 import flash from "connect-flash";
 import passport from "passport";
 import helmet from "helmet";
+import compression from "compression";
 
 import errorHandler from "./src/middleware/errorHandler";
 import { router as authRouter } from "./src/routes/authRouter";
@@ -38,6 +39,7 @@ const app = express();
 app.use(helmet());
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
+app.use(compression());
 
 app.set("views", path.join(__dirname, "src/views"));
 app.set("view engine", "ejs");
