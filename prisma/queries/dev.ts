@@ -36,7 +36,7 @@ export async function createAdmin() {
         client.user.update({
           where: { id: row.id },
           data: { id: { increment: 1 } },
-        }),
+        })
       ),
     ]);
   }
@@ -52,9 +52,15 @@ export async function createAdmin() {
 
   // since the id is manually set, we need to prevent unique constraint error
   await client.$executeRawUnsafe(
-    'SELECT setval(pg_get_serial_sequence(\'"User"\', \'id\'), coalesce(max(id)+1, 1), false) FROM "User";',
+    'SELECT setval(pg_get_serial_sequence(\'"User"\', \'id\'), coalesce(max(id)+1, 1), false) FROM "User";'
   );
   // https://github.com/prisma/prisma/discussions/5256#discussioncomment-1191352
 
   return admin;
+}
+
+export async function wipe() {
+  await truncateTable('User');
+  await truncateTable('Session');
+  await createAdmin();
 }

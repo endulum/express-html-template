@@ -8,7 +8,6 @@
 ## Todo
 
 - Squash
-- Add a testing suite (Vitest)
 - Add utility css file under `public`
 
 ## Installation

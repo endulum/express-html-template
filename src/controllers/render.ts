@@ -42,7 +42,7 @@ export const account = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
   const loginUsernamePrefill = req.flash('loginUsernamePrefill');
-  return res.render('layout', {
+  return res.status(req.formErrors ? 400 : 200).render('layout', {
     page: 'login',
     title: 'Log In',
     prevForm: {
@@ -57,7 +57,7 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const signup = asyncHandler(async (req, res) => {
-  return res.render('layout', {
+  return res.status(req.formErrors ? 400 : 200).render('layout', {
     page: 'signup',
     title: 'Sign Up',
     prevForm: req.body,

@@ -21,9 +21,15 @@ const logOut = asyncHandler(async (req, res, next) => {
   });
 });
 
+const redirectToIndex = asyncHandler(async (_req, res) => {
+  return res.redirect('/');
+});
+
 router.route('/').get(renderIndex);
 router.route('/account').get(render.account).post(user.edit);
 router.route('/logout').get(logOut);
+router.route('/login').all(redirectToIndex);
+router.route('/signup').all(redirectToIndex);
 router.route('*').all(render.notFound);
 
 export { router };
