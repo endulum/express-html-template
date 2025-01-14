@@ -4,10 +4,10 @@
 - **Database:** Postgresql + Prisma ORM
 - **Protection method:** Passport.js + sessions
 - **Templating engine:** EJS
+- **Testing:** Vitest
 
 ## Todo
 
-- Squash
 - Add utility css file under `public`
 
 ## Installation
@@ -38,6 +38,16 @@ For development, at minimum you need:
 - `DATABASE_URL`
 - `SESSION_SECRET` for authentication sessions to work.
   Following that, you should be ready to `npm run dev`.
+
+### Testing
+
+This project uses Docker to provide an independent Postgres database for testing. For your `.env.test`, make sure the database URL points to that database:
+
+```
+DATABASE_URL=postgresql://prisma:prisma@localhost:5433/tests
+```
+
+The script `npm run test` handles bringing up the container, applying any migrations present, and running the tests.
 
 ### Github App
 
