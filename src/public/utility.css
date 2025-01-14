@@ -1,0 +1,77 @@
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row,
+.flex-col {
+  display: flex;
+  align-items: center;
+}
+
+.align-start {
+  align-items: start;
+}
+
+.align-end {
+  align-items: end;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.jcspb {
+  justify-content: space-between;
+}
+
+.p-1 {
+  padding: 1rem;
+}
+
+.p-05 {
+  padding: 0.5rem;
+}
+
+.p-025 {
+  padding: 0.25rem;
+}
+
+.g-1 {
+  gap: 1rem;
+}
+
+.g-05 {
+  gap: 0.5rem;
+}
+
+.g-025 {
+  gap: 0.25rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.mt-05 {
+  margin-top: 0.5rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.mb-05 {
+  margin-bottom: 0.5rem;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.flg {
+  flex-grow: 1;
+}
