@@ -64,7 +64,7 @@ app.use(
       }),
       maxAge: 1000 * 60 * 60 * 24,
     },
-  }),
+  })
 );
 app.use(flash());
 app.use(passport.initialize());
@@ -77,7 +77,7 @@ app.use(
     res.locals.success = req.flash('success');
     if (req.user) return mainRouter(req, res, next);
     else return authRouter(req, res, next);
-  }),
+  })
 );
 
 app.use(errorHandler);

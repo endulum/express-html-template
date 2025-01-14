@@ -6,31 +6,38 @@
     includePrevInput: true
   }) %>
 
-  <div>
-    <h3>Password</h3>
-    <p>Leave this area blank if you would not like to change your password.</p>
-  </div>
+  <% if (locals.user.githubUser) { %>
+    <div>
+      <h3>GitHub</h3>
+      <p>You authenticated using your <a href="https://github.com/<%= locals.user.githubUser %>" target="_blank">GitHub account.</a></p>
+    </div>
+  <% } else if (locals.user.password) { %>
+    <div>
+      <h3>Password</h3>
+      <p>Leave this area blank if you would not like to change your password.</p>
+    </div>
+    
+    <%- include('../../components/form-input', { 
+      name: 'password',
+      label: 'New password',
+      type: 'password',
+      includePrevInput: false
+    }) %>
   
-  <%- include('../../components/form-input', { 
-    name: 'password',
-    label: 'New password',
-    type: 'password',
-    includePrevInput: false
-  }) %>
-
-  <%- include('../../components/form-input', { 
-    name: 'confirmPassword',
-    label: 'Confirm password',
-    type: 'password',
-    includePrevInput: false
-  }) %>
-
-  <%- include('../../components/form-input', { 
-    name: 'currentPassword',
-    label: 'Current password',
-    type: 'password',
-    includePrevInput: false
-  }) %>
+    <%- include('../../components/form-input', { 
+      name: 'confirmPassword',
+      label: 'Confirm password',
+      type: 'password',
+      includePrevInput: false
+    }) %>
+  
+    <%- include('../../components/form-input', { 
+      name: 'currentPassword',
+      label: 'Current password',
+      type: 'password',
+      includePrevInput: false
+    }) %>
+  <% } %>
 
   <button type="submit">Submit</button>
 </form>

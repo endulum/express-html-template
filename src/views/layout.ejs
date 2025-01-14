@@ -22,6 +22,9 @@
         <nav>
           <a href="/login">Log In</a>
           <a href="/signup">Sign Up</a>
+          <% if (process.env.GH_CLIENT_ID) { %>
+            <a href="https://github.com/login/oauth/authorize?client_id=<%= process.env.GH_CLIENT_ID %>&redirect_uri=<%= process.env.DEPLOYMENT_URL %>/github&scope=read%3Auser&allow_signup=true">Authenticate</a>
+          <% } %>
         </nav>
       <% } %>
     </header>

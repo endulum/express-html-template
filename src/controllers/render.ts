@@ -16,6 +16,14 @@ export const rateLimit = asyncHandler(async (_req, res) => {
   });
 });
 
+export const noCode = asyncHandler(async (_req, res) => {
+  return res.status(400).render('layout', {
+    page: 'error',
+    title: 'No Code',
+    message: 'No code was provided for GitHub authentication.',
+  });
+});
+
 export const account = asyncHandler(async (req, res) => {
   if (!req.user) {
     req.flash('warning', 'You must be logged in to edit your account details.');

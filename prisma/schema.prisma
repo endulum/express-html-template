@@ -8,17 +8,19 @@ datasource db {
 }
 
 model Session {
-  id String @id
-  sid String @unique
-  data String
+  id        String   @id
+  sid       String   @unique
+  data      String
   expiresAt DateTime
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @db.VarChar(32) @unique
-  password String @db.VarChar(255)
-  role Role @default(BASIC)
+  id         Int     @id @default(autoincrement())
+  username   String  @unique @db.VarChar(32)
+  role       Role    @default(BASIC)
+  password   String? @db.VarChar(255)
+  githubUser String?
+  githubId   Int?
 }
 
 enum Role {

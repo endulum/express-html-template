@@ -12,6 +12,7 @@ const catchAll = asyncHandler(async (_req, res) => {
 
 router.route('/login').get(render.login).post(auth.logIn);
 router.route('/signup').get(render.signup).post(auth.signUp);
+router.route('/github').get(auth.github);
 router.route('*').all(catchAll);
 
 export { router };

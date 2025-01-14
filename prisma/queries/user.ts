@@ -4,15 +4,18 @@ import bcrypt from 'bcryptjs';
 import { client } from '../client';
 
 export async function find({
-  username,
   id,
+  username,
+  githubId,
 }: {
-  username?: string;
   id?: number;
+  username?: string;
+  githubId?: number;
 }) {
   const OR: Prisma.UserWhereInput[] = [];
   if (id && !Object.is(id, NaN)) OR.push({ id });
   if (username) OR.push({ username });
+  if (githubId) OR.push({ githubId });
   return client.user.findFirst({
     where: { OR },
   });
@@ -40,19 +43,27 @@ export async function comparePassword({
 export async function create({
   username,
   password,
+  githubId,
+  githubUser,
 }: {
   username: string;
-  password: string;
+  password?: string;
+  githubId?: number;
+  githubUser?: string;
 }) {
-  bcrypt.hash(password, 10, async (err, hashedPassword) => {
-    if (err) throw new Error(err.message);
-    await client.user.create({
-      data: {
-        username: username,
-        password: hashedPassword,
-      },
+  if (githubId && githubUser) {
+    const { id } = await client.user.create({
+      data: { username, githubId, githubUser },
     });
-  });
+    return id;
+  } else {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password ?? 'password', salt);
+    const { id } = await client.user.create({
+      data: { username, password: hashedPassword },
+    });
+    return id;
+  }
 }
 
 export async function update({
@@ -75,5 +86,12 @@ export async function update({
       ? { username: userData.username }
       : { id: userData.id },
     data,
+  });
+}
+
+export async function updateGithubUser(id: number, githubUser: string) {
+  await client.user.update({
+    where: { id },
+    data: { githubUser },
   });
 }

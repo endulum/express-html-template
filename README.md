@@ -7,6 +7,7 @@
 
 ## Todo
 
+- Squash
 - Add a testing suite (Vitest)
 - Add utility css file under `public`
 
@@ -38,3 +39,7 @@ For development, at minimum you need:
 - `DATABASE_URL`
 - `SESSION_SECRET` for authentication sessions to work.
   Following that, you should be ready to `npm run dev`.
+
+### Github App
+
+This template lets users authenticate using their GitHub accounts. This project can be run without the necessary env vars for a GitHub app, but the `/github` route will not be functional. You'll need a [GitHub app](https://github.com/settings/apps) of your own to fill in the missing vars and have this functionality complete.

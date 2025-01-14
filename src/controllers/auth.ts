@@ -4,7 +4,7 @@ import passport from 'passport';
 import { rateLimit } from 'express-rate-limit';
 
 import { usernameValidation } from '../common/usernameValidation';
-import { validate } from '../middleware/handleValidationErrors';
+import { validate } from '../middleware/validate';
 import * as userQueries from '../../prisma/queries/user';
 import * as render from './render';
 
@@ -83,3 +83,29 @@ export const signUp = [
     return res.redirect('/login');
   }),
 ];
+
+export const github = asyncHandler(async (req, res, next) => {
+  const { code } = req.query as Record<string, string | null>;
+  if (!code || code === 'undefined') {
+    return render.noCode(req, res, next);
+  }
+  passport.authenticate('github', (err: Error, user: Express.User) => {
+    if (err) return next(err);
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      return res.redirect('/');
+    });
+    // if (!user) {
+    //   req.formErrors = { username: 'Incorrect username or password.' };
+    //   return render.login(req, res, next);
+    // } else
+    // req.logIn(user, (err) => {
+    //   if (err) return next(err);
+    //   return res.redirect('/');
+    // });
+  })(req, res, next);
+  // const accessToken = await exchangeCodeForToken(code);
+  // const githubUser = await fetchGithubUser(accessToken);
+
+  // okay... what next?
+});

@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import { body } from 'express-validator';
 
 import { usernameValidation } from '../common/usernameValidation';
-import { validate } from '../middleware/handleValidationErrors';
+import { validate } from '../middleware/validate';
 import * as userQueries from '../../prisma/queries/user';
 import * as render from './render';
 
@@ -33,7 +33,7 @@ export const edit = [
       if (req.body.password !== '') {
         if (value.length === 0)
           throw new Error(
-            'Please enter your current password in order to change it.',
+            'Please enter your current password in order to change it.'
           );
         const match = await userQueries.comparePassword({
           userData: req.user,
@@ -48,7 +48,7 @@ export const edit = [
     if (!req.user) {
       req.flash(
         'warning',
-        'You must be logged in to edit your account details.',
+        'You must be logged in to edit your account details.'
       );
       return res.redirect('/login');
     }
